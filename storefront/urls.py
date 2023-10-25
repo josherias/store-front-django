@@ -19,7 +19,8 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
-import playground
+admin.site.site_header = 'StoreFront'
+admin.site.index_title = 'Admin'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
