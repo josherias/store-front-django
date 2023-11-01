@@ -33,7 +33,6 @@ class ProductAdmin(admin.ModelAdmin):
         )
         
     
-    
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
     list_display = ['title', 'products_count']
@@ -45,7 +44,6 @@ class CollectionAdmin(admin.ModelAdmin):
         return super().get_queryset(request).annotate(
             products_count = Count('product')
         )            
-
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
