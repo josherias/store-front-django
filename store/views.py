@@ -2,20 +2,27 @@ from re import M
 from typing import Collection
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
-from .models import OrderItem, Product, Collection
-from .serializers import CollectionSerializer, ProductSerializer 
+
+from store.pagination import DefaultPagination
+from .models import OrderItem, Product, Collection, Review
+from .serializers import CollectionSerializer, ProductSerializer, ReviewSerializer 
 
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['collection_id']
+    pagination_class = DefaultPagination
+        
     def get_serializer_context(self):
         return {'request': self.request}
 
@@ -38,14 +45,22 @@ class CollectionViewSet(ModelViewSet):
         return super.destroy(request, *args, **kwargs)
             
 
-    
 
-     
-
-    
-
+class ReviewViewSet(ModelViewSet):
+        # queryset = Review.objects.all()
+        serializer_class = ReviewSerializer
+        
+        # usd method coz we dint have access to the self 
+        def get_queryset(self):
+             return Review.objects.filter(product_id=self.kwargs['product_pk'])
+        
+        # context passes data to serializer
+        def get_serializer_context(self):
+             return {'product_id': self.kwargs['product_pk']}
+        
         
 
+        
 
 
 
