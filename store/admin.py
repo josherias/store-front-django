@@ -24,6 +24,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     def collection_title(self, product):
         return product.collection.title
+    
     @admin.action(description='Clear inventory')
     def clear_inventory(self, request, queryset):
         updated_count = queryset.update(inventory=0)
