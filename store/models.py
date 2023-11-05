@@ -83,12 +83,17 @@ class OrderItem(models.Model):
     
        
 class Cart(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid4)
     created_at = models.DateTimeField(auto_now_add=TRUE)
     
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')  #instead of cartitem_set 
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField()
+    
+    #allow no dupliate records for the product in cart
+    class Meta:
+        unique_together = [['cart', 'product']]
     
 class Address(models.Model):
     street = models.CharField(max_length=255)
